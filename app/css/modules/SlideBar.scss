@@ -1,0 +1,27 @@
+@import "../loadin";
+.menu{
+    background-color: $black-medium;
+    //background-image: linear-gradient(to bottom, $black-light, $black-medium,$black-medium2);
+    a{
+        color:$gray-light;
+    }
+    li{
+        transition: all .3s;
+        &:hover,
+        &.active{
+            background-color: $black-light;
+        }
+        > a{
+            display: block;
+            padding: 15px;
+        }
+    }
+}
+.copy{
+    padding: 20px 0;
+    margin: 0 15px;
+    border-top: 1px solid $gray-dark;
+    font-size: 12px;
+    text-align: center;
+    color:$gray-medium;
+}

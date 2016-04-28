@@ -1,0 +1,32 @@
+@import "../loadin";
+
+header{
+    background-color: $main-color;
+    background-image: linear-gradient(to left, #d6313a, #c7232d, #ac1119);
+    color:$white;
+    border-radius: 10px 10px 0 0;
+    @include clearfix;
+}
+.logo{
+    float: left;
+    font-size: 30px;
+    text-align: left;
+    width: 200px;
+    margin: 0;
+    padding: 15px;
+    border-radius: 10px 0 0;
+    background-color: $black-medium;
+}
+.system{
+    float: right;
+    margin-top: 25px;
+    margin-bottom: 0;
+    margin-right: 15px;
+    @include clearfix;
+    li{
+        float: left;
+        & + li {
+            margin-left: 20px;
+        }
+    }
+}

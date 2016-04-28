@@ -1,0 +1,40 @@
+@import './lib/util/util';
+@import './lib/global';
+@import "./lib/foundation";
+$closebutton-size: 18px;
+
+$grapefruit-light: #ed5565;
+$grapefruit: #da4453;
+$bittersweet-light: #fc6e51;
+$bittersweet: #e9573f;
+$sunflower-light: #ffce54;
+$sunflower: #f6bb42;
+$grass-light: #a0d468;
+$grass: #8cc152;
+$mint-light: #48cfad;
+$mint: #37bc9b;
+$aqua-light: #ac92ec;
+$aqua: #967adc;
+$pink-light: #ec87c0;
+$pink: #d770ad;
+$white: #fff;
+$gray-light: #f5f7fa;
+$gray-light2: #e6e9ed;
+$gray-medium: #ccd1d9;
+$gray-medium2: #aab2bd;
+$gray-dark: #656d78;
+$gray-dark2: #434a54;
+$black-light: #333;
+$black-medium: #2c2e31;
+$black-medium2: #22252A;
+
+
+$main-color: #9F2A04;
+$hover: $grapefruit-light;
+$back-color: $gray-dark2;
+$bg-gray: $gray-light;
+$primary: #2199e8;
+$secondary: #777;
+$success: #3adb76;
+$warning: #ffae00;
+$alert: #ec5840;

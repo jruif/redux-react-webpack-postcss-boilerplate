@@ -1,0 +1,53 @@
+@import "loadin";
+
+:global {
+    @include foundation-form-prepostfix;
+    @include foundation-text-alignment;
+    @include foundation-global-styles;
+    @include foundation-button-group;
+    @include foundation-close-button;
+    @include foundation-flex-grid;
+    @include foundation-callout;
+    @include foundation-button;
+    @include foundation-forms;
+    @include foundation-table;
+    @include foundation-label;
+    @include foundation-tabs;
+    @include foundation-menu;
+    body {
+        font-family: $body-font-family;
+        background-color: $bg-gray;
+    }
+    .row {
+        max-width: none;
+    }
+    a{
+        text-decoration: none;
+    }
+    ul{
+        padding: 0;
+    }
+}
+
+.root{
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+.main{
+    padding: 0;
+    border-radius: 0 0 10px 10px;
+    @include clearfix;
+}
+aside{
+    width: 200px;
+    float: left;
+    min-height: 100%;
+    border-radius: 0 0 0 10px;
+}
+.content{
+    margin-left: 220px;
+    overflow: hidden;
+}
+ul{
+    list-style: none;
+}
