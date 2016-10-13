@@ -10,10 +10,12 @@ var $ = require('gulp-load-plugins')({
 });
 
 module.exports = function (options) {
-	// 生产环境
-    gulp.task('build:dist',['assets','ftp']);
-    // 测试环境
-    gulp.task('build:dev',['assets'], () => {
-        gulp.start('f2e');
+    // 生产环境
+    gulp.task('build:dist',['assets'],function(){
+        gulp.start('ftp'); //todo: start已被移除,官方推荐 https://www.npmjs.com/package/lazypipe
+    });
+    // f2e 测试环境
+    gulp.task('build:f2e',['assets'],function(){
+        gulp.start('f2e'); //todo: start已被移除
     });
 };

@@ -1,4 +1,7 @@
-
+/*
+*  App.js
+*
+* */
 import React,{ Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,19 +17,19 @@ import * as InfoAction from '../action/info'
     allowMultiple: true
 })
 class App extends Component {
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
-    render(){
+    render() {
         const { location, appInfo, children } = this.props;
 
         return (
             <div styleName="root">
                 <Header info={appInfo}/>
                 <section styleName="main">
-                    <SlideBar location={ location } />
-                    <section styleName="content">
+                    <SlideBar location={ location }/>
+                    <section styleName="content" onblur="">
                         {children}
                     </section>
                 </section>

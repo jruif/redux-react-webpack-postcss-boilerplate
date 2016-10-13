@@ -1,11 +1,19 @@
 var path = require('path');
 var webpack = require('webpack');
+var HappyPack = require('happypack');
+var happyThreadPool = HappyPack.ThreadPool({ size: 4 });
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-
+function makeExtract(){
+	var loader = 'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]';
+	var param = [].slice.call(arguments).join('!');
+	return ExtractTextPlugin.extract('style', loader + (param[0] === '!' ? param : ('!' + param) ) );
+	// return ['style',loader,...[].slice.call(arguments)].join('!');
+}
 module.exports = {
-	devtool: 'cheap-module-eval-source-map',
+	devtool: 'eval-source-map',
 	entry: [
+		'babel-polyfill',
 		'eventsource-polyfill', // necessary for hot reloading with IE
 		'webpack-hot-middleware/client',
 		'./app/js/index'
@@ -14,7 +22,7 @@ module.exports = {
 		path: path.join(__dirname, 'dist'),
 		filename: 'js/bundle.js',
 		chunkFilename: 'js/[id].bundle.js',
-		publicPath: '/static/',
+		publicPath: '/dist/',
 		pathinfo: true
 	},
 	plugins: [
@@ -24,8 +32,12 @@ module.exports = {
 			DEBUG: true
 		}),
 		new ExtractTextPlugin('css/app.css', {
-			allChunks: false
-		})
+			allChunks: true
+		}),
+		//new HappyPack({
+		//    id: 'scss',
+		//    threadPool: happyThreadPool
+		//})
 	],
 	module: {
 		loaders: [
@@ -36,16 +48,24 @@ module.exports = {
 				exclude: path.join(__dirname, 'app/js/plugins')
 			}, {
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract('style', 'css'),
+				loader: makeExtract(),
 				include: path.join(__dirname, 'app/css')
 			}, {
 				test: /\.scss$/,
-				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss!sass'),
+				loader: makeExtract('postcss','sass'),
 				include: path.join(__dirname, 'app/css')
 			}, {
 				test: /\.png|jpe?g|gif$/,
 				loader: 'url-loader?limit=2000&name=img/[hash].[ext]',
 				include: path.join(__dirname, 'app/img')
+			},{
+				test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+				loader: "url-loader?limit=10000&minetype=application/font-woff",
+				include: path.join(__dirname, 'app/css')
+			},{
+				test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+				loader: "file-loader",
+				include: path.join(__dirname, 'app/css')
 			}
 		]
 	},
@@ -87,11 +107,11 @@ module.exports = {
 							}));
 						});
 					},
-                    onSaveSpritesheet: function(opts, groups) {
-                        // We assume that the groups is not an empty array
-                        var filenameChunks = groups.slice().push('png');
-                        return path.join(opts.spritePath, filenameChunks.join('.'));
-                    }
+					onSaveSpritesheet: function(opts, groups) {
+						// We assume that the groups is not an empty array
+						var filenameChunks = groups.slice().push('png');
+						return path.join(opts.spritePath, filenameChunks.join('.'));
+					}
 				}
 			})
 		];

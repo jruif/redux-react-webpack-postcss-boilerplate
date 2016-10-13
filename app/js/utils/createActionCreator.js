@@ -21,9 +21,20 @@
  *          age
  *      }
  * }
+ *
+ *
+ * function info(name, age){
+ *      return {
+ *          type: 'USER',
+ *          name,
+ *          onOk: () => {
+ *              //...
+ *          }
+ *      }
+ * }
  */
 
-export default function createActionCreator(type, ...key) {
+export function createActionCreator(type, ...key) {
 
     let obj = { type };
     return function (...argv) {
@@ -32,4 +43,14 @@ export default function createActionCreator(type, ...key) {
         });
         return obj;
     }
+}
+
+/*
+ *
+ * var update = updateActionCreator(UPDATE_FB_List);
+ *
+ * */
+
+export function updateActionCreator(type) {
+    return createActionCreator(type, 'key', 'value', 'index', 'count');
 }

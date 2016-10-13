@@ -3,6 +3,8 @@ var express = require('express');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
 var fs = require('fs');
+var bodyParser = require('body-parser');
+var compression = require('compression');   // 启用gzip
 var exec = require('child_process').exec;
 var app = express();
 var compiler = webpack(config);
@@ -10,14 +12,18 @@ var compiler = webpack(config);
 var port = 9000;
 
 var handlers = [
-    //express.static(__dirname + '/dist'),
+    // express.static(__dirname + '/dist'),
     require('webpack-dev-middleware')(compiler, {
         noInfo: true,
-        publicPath: config.output.publicPath
+        publicPath: config.output.publicPath,
+        headers: {
+            "Access-Control-Allow-Origin": "*"
+        }
     }),
     require('webpack-hot-middleware')(compiler),
-    //bodyParser.urlencoded({extended: true}),
-    //bodyParser.json()
+    compression(),
+    bodyParser.urlencoded({extended: true}),
+    bodyParser.json()
 ];
 
 function mySuperMiddleware(req, res, next) {
@@ -34,6 +40,7 @@ function mySuperMiddleware(req, res, next) {
             next();
         }
     }
+
     run(0);
 }
 

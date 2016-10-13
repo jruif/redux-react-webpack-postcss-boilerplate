@@ -3,76 +3,76 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
 // Init configs
 var publishConfig = global.publish || {
-        hash:true
-    };
+		hash: true,
+		assetPath: `http://img5.cache.netease.com/utf8/${packageJson.name}/`,
+		revision: null
+	};
 var revision = publishConfig.revision ? publishConfig.revision + '/' : '';
 var publicPath = publishConfig.assetPath || '/static/';
-var hash = publishConfig.hash ? '.[hash]' : '';
-var packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-
+var hash = publishConfig.hash ? '.[hash]' : '';	// hash: 所有文件用同一个, chunkhash 每个文件一个hash
 
 module.exports = {
-	devtool: 'source-map-hidden',
+	devtool: false,
 	entry: {
-		app: './app/js/index',
+		app: './app/js/index.jsx',
 		vendor: Object.keys(packageJson.dependencies)
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: revision + 'js/bundle.[hash].js',
+		filename: revision + 'js/bundle' + hash + '.js',
 		chunkFilename: revision + 'js/[hash].bundle.js',
 		publicPath: publicPath
 	},
 	plugins: [
+		new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
 		new webpack.optimize.CommonsChunkPlugin({
 			names: ['vendor'],
-			filename: 'js/[name].js',
+			filename: 'js/[name]' + hash + '.js',
 			minChunks: Infinity
 		}),
+		new ExtractTextPlugin(revision + 'css/app'+ hash +'.css', {
+			allChunks: false
+		}),
 		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.DefinePlugin({
+			'process.env': {
+				'NODE_ENV': JSON.stringify('production') // JSON.stringify ensures it's a quoted quoted string
+			}
+		}),
 		new webpack.optimize.UglifyJsPlugin({
 			compressor: {
 				warnings: false
 			}
 		}),
-		new ExtractTextPlugin(revision + 'css/app.css', {
-			allChunks: false
-		}),
-		new webpack.DefinePlugin({
-			'process.env': {
-				'NODE_ENV': JSON.stringify('production')
-			}
-		}),
-		new webpack.NoErrorsPlugin(),
 		new HtmlWebpackPlugin({
 			filename: 'index.html',
-	      	template: './app/index.html'
-	    })
+			template: 'app/index.tmp.html'
+		})
 	],
 	module: {
 		loaders: [
 			{
-				test: /\.jsx?/,
+				test: /\.jsx?/i,
 				loaders: ['babel'],
-				include: path.join(__dirname, 'app/js'),
-				exclude: path.join(__dirname, 'app/js/plugins')
+				include: path.join(__dirname, 'app/js')
 			}, {
-				test: /\.css$/,
+				test: /\.css$/i,
 				loader: ExtractTextPlugin.extract('style', 'css'),
 				include: path.join(__dirname, 'app/css')
 			}, {
-				test: /\.scss$/,
+				test: /\.scss$/i,
 				loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1!postcss!sass'),
 				include: path.join(__dirname, 'app/css')
 			}, {
-				test: /\.png|jpe?g|gif$/,
+				test: /\.png|jpe?g|gif$/i,
 				loader: 'url-loader?limit=2000&name=img/[hash].[ext]',
 				include: path.join(__dirname, 'app/img')
 			}, {
-				test: /\.html/,
+				test: /\.html$/i,
 				loader: 'html-loader'
 			}
 		]
@@ -97,11 +97,11 @@ module.exports = {
 				stylesheetPath: './src/css',
 				spritePath: './src/img/sprite.png',
 				filterBy: function(img) {
-					return /\/sp\-/.test(img.url);
+					return /\/sp\-/.test(img.url) ? Promise.resolve(): Promise.reject() ;
 				},
 				groupBy: function(img) {
 					var match = img.url.match(/\/(sp\-[^\/]+)\//);
-					return match ? match[1] : null;
+					return match ? Promise.resolve(match[1]): Promise.reject();
 				},
 				hooks: {
 					onUpdateRule: function(rule, token, image) {

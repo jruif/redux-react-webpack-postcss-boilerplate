@@ -46,7 +46,7 @@ export function ajax(url,opt,callback){
                 if( error.status === 'timeout' ){
                     //需要登陆
                     error.onOk = () => {
-                        location.href = error.datas;
+                        location.href = 'http://未登录时使用';
                     }
                 }else{
                     error.status = 'alert';
